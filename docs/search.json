@@ -1,0 +1,114 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "NHL Goals Linear Regression",
+    "section": "",
+    "text": "Trevor Jensen\nParker Allen\nBrayden Kellerby"
+  },
+  {
+    "objectID": "index.html#group",
+    "href": "index.html#group",
+    "title": "NHL Goals Linear Regression",
+    "section": "",
+    "text": "Trevor Jensen\nParker Allen\nBrayden Kellerby"
+  },
+  {
+    "objectID": "index.html#research-question",
+    "href": "index.html#research-question",
+    "title": "NHL Goals Linear Regression",
+    "section": "Research Question",
+    "text": "Research Question"
+  },
+  {
+    "objectID": "index.html#data-source",
+    "href": "index.html#data-source",
+    "title": "NHL Goals Linear Regression",
+    "section": "Data Source",
+    "text": "Data Source\nNHL team data from Kaggle https://www.kaggle.com/datasets/martinellis/nhl-game-data/data?select=game_teams_stats.csv"
+  },
+  {
+    "objectID": "index.html#project-overview",
+    "href": "index.html#project-overview",
+    "title": "NHL Goals Linear Regression",
+    "section": "Project Overview",
+    "text": "Project Overview\nWe are looking at factors that may affect the total number of goals scored in NHL games."
+  },
+  {
+    "objectID": "index.html#project-pages",
+    "href": "index.html#project-pages",
+    "title": "NHL Goals Linear Regression",
+    "section": "Project Pages",
+    "text": "Project Pages\n-Case Study -AI Use\nThis is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "ai-use.html#ai-check-1",
+    "href": "ai-use.html#ai-check-1",
+    "title": "AI Use",
+    "section": "AI Check 1",
+    "text": "AI Check 1"
+  },
+  {
+    "objectID": "ai-use.html#ai-check-2",
+    "href": "ai-use.html#ai-check-2",
+    "title": "AI Use",
+    "section": "AI Check 2",
+    "text": "AI Check 2"
+  },
+  {
+    "objectID": "ai-use.html#ai-check-3",
+    "href": "ai-use.html#ai-check-3",
+    "title": "AI Use",
+    "section": "AI Check 3",
+    "text": "AI Check 3"
+  },
+  {
+    "objectID": "ai-use.html#current",
+    "href": "ai-use.html#current",
+    "title": "AI Use",
+    "section": "Current",
+    "text": "Current"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "case-study.html#research-questions",
+    "href": "case-study.html#research-questions",
+    "title": "Case Study",
+    "section": "Research Questions",
+    "text": "Research Questions"
+  },
+  {
+    "objectID": "case-study.html#about-data",
+    "href": "case-study.html#about-data",
+    "title": "Case Study",
+    "section": "About Data",
+    "text": "About Data"
+  },
+  {
+    "objectID": "case-study.html#methods",
+    "href": "case-study.html#methods",
+    "title": "Case Study",
+    "section": "Methods",
+    "text": "Methods"
+  },
+  {
+    "objectID": "case-study.html#results",
+    "href": "case-study.html#results",
+    "title": "Case Study",
+    "section": "Results",
+    "text": "Results"
+  },
+  {
+    "objectID": "case-study.html#conclusions",
+    "href": "case-study.html#conclusions",
+    "title": "Case Study",
+    "section": "Conclusions",
+    "text": "Conclusions"
+  }
+]

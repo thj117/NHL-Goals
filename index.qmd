@@ -1,0 +1,25 @@
+---
+title: "NHL Goals Linear Regression"
+---
+
+## Group
+- Trevor Jensen
+- Parker Allen
+- Brayden  Kellerby
+
+## Research Question
+
+## Data Source
+NHL team data from Kaggle
+https://www.kaggle.com/datasets/martinellis/nhl-game-data/data?select=game_teams_stats.csv
+
+## Project Overview
+We are looking at factors that may affect the total number of goals scored in NHL games.
+
+## Project Pages
+-[Case Study](case-study.qmd)
+-[AI Use](ai-use.qmd)
+
+This is a Quarto website.
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
