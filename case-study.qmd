@@ -10,6 +10,8 @@ How do much do different factors in a game contribute to the amount of goals sco
 How well can we predict how many goals are scored based off of a model to predict goals scored by a team in a game based off of the factors we studied?
 
 ## About Data
+The data was collected by using Kevin Sidwar’s “documenting the still un-documented NHL stats API”. There was no licisnceing that was found on kaggle when the data was collected and all of the information on here is public knowledge and could be found if you took the time your self. I don’t think there is any privacy or ethical concerns with this dataset.
+The data includes scores and measured statistics from NHL games over many years. Some of the measured statistics include the amount of goals scored, the amount of shots, which teams were home or away, the amount of power play opprotunities and many other commonly measured hockey statistics. 
 
 ## Methods
 
