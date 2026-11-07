@@ -3,6 +3,87 @@ title: "AI Use"
 ---
 
 ## Proposed AI Usage
+Prompt: using this data(https://www.kaggle.com/datasets/martinellis/nhl-game-data/data?select=game_teams_stats.csv) we want to use goals scored as a nominal response factor, fit a model after making the necessary adjustments for the model.
+
+AI Response: 
+Install required packages if you don't have them:
+install.packages(c("tidyverse", "nnet", "caret"))
+
+```{r}
+library(tidyverse)
+library(nnet)
+library(caret)
+```
+
+
+1. Load Data
+
+```{r}
+df <- read_csv('game_teams_stats.csv')
+```
+
+2. Make Necessary Adjustments for Nominal Response Target
+Bin goals into nominal categories: 'Low' (0-1), 'Medium' (2-3), 'High' (4+)
+
+```{r}
+df <- df %>%
+mutate(
+goals_nominal = case_when(
+goals <= 1 ~ "Low_Goals",
+goals <= 3 ~ "Medium_Goals",
+TRUE ~ "High_Goals"
+),
+goals_nominal = as.factor(goals_nominal)
+)
+```
+
+3. Feature Selection & Data Cleaning
+Drop target leakage ('won', 'powerPlayGoals'), raw 'goals', and IDs
+
+```{r}
+leakage_cols <- c("goals", "won", "powerPlayGoals", "game_id", "team_id", "head_coach")
+df_model <- df %>%
+select(-any_of(leakage_cols)) %>%
+mutate(across(where(is.character), as.factor)) %>%
+drop_na()
+```
+
+4. Train/Test Split (Stratified by goals_nominal)
+
+```{r}
+train_index <- createDataPartition(df_model$goals_nominal, p = 0.8, list = FALSE)
+train_data <- df_model[train_index, ]
+test_data <- df_model[-train_index, ]
+```
+set.seed(42)
+
+5. Set the Reference Level for the Nominal Factor
+'Low_Goals' will serve as the baseline category for the log-odds comparisons
+
+```{r}
+train_data$goals_nominal <- relevel(train_data$goals_nominal, ref = "Low_Goals")
+test_data$goals_nominal <- relevel(test_data$goals_nominal, ref = "Low_Goals")
+```
+
+6. Fit Multinomial Logistic Regression Model using nnet::multinom
+Note: scaling numeric predictors beforehand can help convergence if scales differ vastly
+
+```{r}
+model <- multinom(goals_nominal ~ ., data = train_data, MaxNWts = 2000)
+#View model summary (coefficients and standard errors)
+summary(model)
+```
+
+7. Model Evaluation
+
+```{r}
+predictions <- predict(model, newdata = test_data)
+# Generate confusion matrix and accuracy metrics
+conf_matrix <- confusionMatrix(predictions, test_data$goals_nominal)
+print(conf_matrix)
+```
+
+
 
 ## AI Check 1
 
