@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -127,8 +162,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#proposed-ai-usage" id="toc-proposed-ai-usage" class="nav-link active" data-scroll-target="#proposed-ai-usage">Proposed AI Usage</a></li>
   <li><a href="#ai-check-1" id="toc-ai-check-1" class="nav-link" data-scroll-target="#ai-check-1">AI Check 1</a></li>
   <li><a href="#ai-check-2" id="toc-ai-check-2" class="nav-link" data-scroll-target="#ai-check-2">AI Check 2</a></li>
-  <li><a href="#ai-check-3" id="toc-ai-check-3" class="nav-link" data-scroll-target="#ai-check-3">AI Check 3</a></li>
-  <li><a href="#current" id="toc-current" class="nav-link" data-scroll-target="#current">Current</a></li>
+  <li><a href="#current-revision" id="toc-current-revision" class="nav-link" data-scroll-target="#current-revision">Current Revision</a></li>
   </ul>
 </nav>
     </div>
@@ -156,18 +190,197 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="proposed-ai-usage" class="level2">
 <h2 class="anchored" data-anchor-id="proposed-ai-usage">Proposed AI Usage</h2>
+<p>Prompt: using this data(https://www.kaggle.com/datasets/martinellis/nhl-game-data/data?select=game_teams_stats.csv) we want to use goals scored as a nominal response factor, fit a model after making the necessary adjustments for the model.</p>
+<p>AI Response: Install required packages if you don’t have them: install.packages(c(“tidyverse”, “nnet”, “caret”))</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.6
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nnet)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice
+
+Attaching package: 'caret'
+
+The following object is masked from 'package:purrr':
+
+    lift</code></pre>
+</div>
+</div>
+<ol type="1">
+<li>Load Data</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'game_teams_stats.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 52610 Columns: 17
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (4): HoA, settled_in, head_coach, startRinkSide
+dbl (12): game_id, team_id, goals, shots, hits, pim, powerPlayOpportunities,...
+lgl  (1): won
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Make Necessary Adjustments for Nominal Response Target Bin goals into nominal categories: ‘Low’ (0-1), ‘Medium’ (2-3), ‘High’ (4+)</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">goals_nominal =</span> <span class="fu">case_when</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>goals <span class="sc">&lt;=</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Low_Goals"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>goals <span class="sc">&lt;=</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Medium_Goals"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"High_Goals"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">goals_nominal =</span> <span class="fu">as.factor</span>(goals_nominal)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="3" type="1">
+<li>Feature Selection &amp; Data Cleaning Drop target leakage (‘won’, ‘powerPlayGoals’), raw ‘goals’, and IDs</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>leakage_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"goals"</span>, <span class="st">"won"</span>, <span class="st">"powerPlayGoals"</span>, <span class="st">"game_id"</span>, <span class="st">"team_id"</span>, <span class="st">"head_coach"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_model <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="sc">-</span><span class="fu">any_of</span>(leakage_cols)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), as.factor)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">drop_na</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="4" type="1">
+<li>Train/Test Split (Stratified by goals_nominal)</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(df_model<span class="sc">$</span>goals_nominal, <span class="at">p =</span> <span class="fl">0.8</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> df_model[train_index, ]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> df_model[<span class="sc">-</span>train_index, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>set.seed(42)</p>
+<ol start="5" type="1">
+<li>Set the Reference Level for the Nominal Factor ‘Low_Goals’ will serve as the baseline category for the log-odds comparisons</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>train_data<span class="sc">$</span>goals_nominal <span class="ot">&lt;-</span> <span class="fu">relevel</span>(train_data<span class="sc">$</span>goals_nominal, <span class="at">ref =</span> <span class="st">"Low_Goals"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>test_data<span class="sc">$</span>goals_nominal <span class="ot">&lt;-</span> <span class="fu">relevel</span>(test_data<span class="sc">$</span>goals_nominal, <span class="at">ref =</span> <span class="st">"Low_Goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="6" type="1">
+<li>Fit Multinomial Logistic Regression Model using nnet::multinom Note: scaling numeric predictors beforehand can help convergence if scales differ vastly</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(goals_nominal <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">MaxNWts =</span> <span class="dv">2000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># weights:  42 (26 variable)
+initial  value 25976.687566 
+iter  10 value 24894.799630
+iter  20 value 24637.038624
+final  value 24250.037534 
+converged</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#View model summary (coefficients and standard errors)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in sqrt(diag(vc)): NaNs produced</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+multinom(formula = goals_nominal ~ ., data = train_data, MaxNWts = 2000)
+
+Coefficients:
+             (Intercept)    HoAhome settled_inREG settled_intbc      shots
+High_Goals    -2.7654523 0.27484187    0.05499015             0 0.04576294
+Medium_Goals  -0.3209427 0.05216105   -0.67239803             0 0.02201452
+                    hits          pim powerPlayOpportunities
+High_Goals   -0.02995381  0.005329948             0.10096151
+Medium_Goals -0.01205602 -0.007429470             0.03741656
+             faceOffWinPercentage   giveaways  takeaways    blocked
+High_Goals            0.004758225 -0.02085659 0.06770336 0.08984391
+Medium_Goals          0.003816631 -0.01436413 0.03334605 0.05190169
+             startRinkSideright
+High_Goals           0.06850480
+Medium_Goals         0.06450257
+
+Std. Errors:
+             (Intercept)    HoAhome settled_inREG settled_intbc       shots
+High_Goals     0.1847121 0.03968443    0.04843289           NaN 0.002838678
+Medium_Goals   0.1689023 0.03683533    0.04252609  3.691683e-16 0.002645469
+                    hits         pim powerPlayOpportunities
+High_Goals   0.002183233 0.002356510             0.01255008
+Medium_Goals 0.001971504 0.002325121             0.01181821
+             faceOffWinPercentage   giveaways   takeaways     blocked
+High_Goals            0.002587767 0.003937472 0.005215485 0.003892385
+Medium_Goals          0.002400525 0.003648792 0.004932148 0.003639060
+             startRinkSideright
+High_Goals           0.03663405
+Medium_Goals         0.03396933
+
+Residual Deviance: 48500.08 
+AIC: 48548.08 </code></pre>
+</div>
+</div>
+<ol start="7" type="1">
+<li>Model Evaluation</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> test_data)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate confusion matrix and accuracy metrics</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predictions, test_data<span class="sc">$</span>goals_nominal)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(conf_matrix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+              Reference
+Prediction     Low_Goals High_Goals Medium_Goals
+  Low_Goals          123         36          104
+  High_Goals         178        612          469
+  Medium_Goals      1094       1241         2052
+
+Overall Statistics
+                                          
+               Accuracy : 0.4717          
+                 95% CI : (0.4589, 0.4845)
+    No Information Rate : 0.4442          
+    P-Value [Acc &gt; NIR] : 1.216e-05       
+                                          
+                  Kappa : 0.1069          
+                                          
+ Mcnemar's Test P-Value : &lt; 2.2e-16       
+
+Statistics by Class:
+
+                     Class: Low_Goals Class: High_Goals Class: Medium_Goals
+Sensitivity                   0.08817            0.3240              0.7817
+Specificity                   0.96899            0.8391              0.2890
+Pos Pred Value                0.46768            0.4861              0.4677
+Neg Pred Value                0.77471            0.7254              0.6235
+Prevalence                    0.23608            0.3197              0.4442
+Detection Rate                0.02082            0.1036              0.3473
+Detection Prevalence          0.04451            0.2131              0.7424
+Balanced Accuracy             0.52858            0.5815              0.5353</code></pre>
+</div>
+</div>
 </section>
 <section id="ai-check-1" class="level2">
 <h2 class="anchored" data-anchor-id="ai-check-1">AI Check 1</h2>
+<p>During AI given model correctly looks at the goals as ordinal values. By turning them into catagorical values. I would be cautious looking at the data, because of the way the values are just being dropped. By just dropping the data it might affect the model and the predictions there needs to be a different way to clean the data.</p>
 </section>
 <section id="ai-check-2" class="level2">
 <h2 class="anchored" data-anchor-id="ai-check-2">AI Check 2</h2>
+<p>The goals are already somewhat ordinal, so maybe they just need to be ordered and catagorized. Then the predictors aren’t scaled accurately all of the variables have different ranges and values and need to be standardized.</p>
 </section>
-<section id="ai-check-3" class="level2">
-<h2 class="anchored" data-anchor-id="ai-check-3">AI Check 3</h2>
-</section>
-<section id="current" class="level2">
-<h2 class="anchored" data-anchor-id="current">Current</h2>
+<section id="current-revision" class="level2">
+<h2 class="anchored" data-anchor-id="current-revision">Current Revision</h2>
 
 
 </section>
