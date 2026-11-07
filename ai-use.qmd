@@ -83,12 +83,13 @@ conf_matrix <- confusionMatrix(predictions, test_data$goals_nominal)
 print(conf_matrix)
 ```
 
-
-
 ## AI Check 1
+During AI given model correctly looks at the goals as ordinal values. By turning them into catagorical values. I would be cautious looking at the data, because of the way the values are just being dropped. By just dropping the data it might affect the model and the predictions there needs to be a different way to clean the data.
+
+
 
 ## AI Check 2
+The goals are already somewhat ordinal, so maybe they just need to be ordered and catagorized. Then the predictors aren't scaled accurately all of the variables have different ranges and values and need to be standardized. 
 
-## AI Check 3
 
-## Current
+## Current Revision
